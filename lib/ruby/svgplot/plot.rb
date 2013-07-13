@@ -94,26 +94,32 @@ class Svgplot::FPlot < Svgplot::Plot
 			scales
 		end
 		style = data[:style] ||= DefaultStyle
-		opts = data[:options] ||= {}
+		opts = data[:options] ||= {:with_lines => false}
 		if data[:f]
 			f = data[:f]
 			if f.class == Proc
 				plot_single_function f, style, opts
+				@legend << {:desc => data[:desc], :style => style, :type => :line} unless data[:desc].nil?
 			end
 			if f.class == Array
-				f.each do |foo|
+				f.each_with_index do |foo,i|
 					plot_single_function foo, style, opts
 				end
 			end
 		end
 		if data[:pairs]
+			data[:mark] ||= :cros unless opts[:with_lines]
 			data[:pairs].each_with_index do |pair, i|
 				if opts[:with_lines]
 					line(trx(pair[0]), try(pair[1]),
 					     trx(data[:pairs][i+1][0]),try(data[:pairs][i+1][1]), style) unless i+1 >= data[:pairs].size
 				else
-					circle trx(pair[0]), try(pair[1]), 2, style
+					mark trx(pair[0]), try(pair[1]), 5,data[:mark], style
 				end
+			end
+			unless data[:desc].nil?
+				legend_item = {:style => style, :desc => data[:desc], :type => (opts[:with_lines]?:line : data[:mark])}
+				@legend << legend_item
 			end
 		end
 	end
