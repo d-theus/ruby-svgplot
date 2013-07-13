@@ -13,6 +13,8 @@ module Svgplot
 			@param[:w] ||= 800
 			@param[:xrange] ||= [-5.0,5.0]
 			@param[:yrange] ||= [-5.0,5.0]
+			@param[:xticks] ||= 100
+			@param[:yticks] ||= 20
 			@param[:xp] ||= 2
 			@param[:yp] ||= 1
 			@param[:span] ||= 7
@@ -41,27 +43,29 @@ module Svgplot
 		end
 
 		def frame(type, settings = {})
+			w = @param[:w]
+			h = @param[:h]
+			s = @param[:span]
+			 
+			line 0,0,0,h
+			line 0,0,w,0
+			line w,0,w,h
+			line 0,h,w,h
+
 			case type
 			when :plot then
 				xlabel = settings[:xlabel] || ""
 				ylabel = settings[:ylabel] || ""
 
-				s = @param[:span]
-
-				line 0,0,0,@param[:h]
-				line 0,0,@param[:w],0
-				line @param[:w],0,@param[:w],@param[:h]
-				line 0,@param[:h],@param[:w],@param[:h]
-
 				tx = @param[:xrange][0].floor.to_f - 1.0
 				ty = @param[:yrange][0].floor.to_f - 1.0
 
 				while tx < @param[:xrange][1]
-					line 	trx(tx),@param[:h]+s/2,
-						trx(tx),@param[:h]-s/2
+					line 	trx(tx),h+s/2,
+						trx(tx),h-s/2
 					line 	trx(tx),0+s/2,
 						trx(tx),0-s/2
-					text trx(tx),@param[:h]-2*s,tx.to_s,{"font-size"=> (1.2*s).to_s}
+					text trx(tx),h-2*s,tx.to_s,{"font-size"=> (1.2*s).to_s}
 					text trx(tx),0+2*s,tx.to_s,{"font-size"=> (1.2*s).to_s}
 					tx += 1/@param[:xp].to_f
 				end
@@ -69,16 +73,24 @@ module Svgplot
 				while ty < @param[:yrange][1]
 					line 	0-s/2,try(ty),
 						0+s/2,try(ty)
-					line 	@param[:w]-s/2,try(ty),
-						@param[:w]+s/2,try(ty)
+					line 	w-s/2,try(ty),
+						w+s/2,try(ty)
 					text 0+s, try(ty), ty.to_s,"font-size" => (1.2*s).to_s
-					text @param[:w] - (1.2*s).to_s.length*s, try(ty), ty.to_s,"font-size" => (1.2*s).to_s
+					text w - (1.2*s).to_s.length*s, try(ty), ty.to_s,"font-size" => (1.2*s).to_s
 					ty += 1/@param[:yp].to_f
 				end
 			when :bar then
-				puts "bar"
-			when :chart then
-				puts "chart"
+				ty = 0.0
+				while ty < h
+					line w-s, ty, w, ty
+					line 0, ty, s, ty
+					mark = (1.0-ty/h)
+					text 0+s, ty, mark.round(2).to_s,"font-size" => (1.2*s).to_s
+					text w - 4*s, ty, (1.0-ty/h).round(2).to_s,"font-size" => (1.2*s).to_s
+					ty += h/@param[:yticks]
+				end
+			when :pie then
+				puts "pie"
 			else raise ArgumentError, "Unknown or undefined type: #{type.to_s}"
 			end
 		end
