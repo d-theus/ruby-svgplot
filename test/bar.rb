@@ -1,10 +1,22 @@
 require 'ruby/svgplot'
 
-p = Svgplot::Plot.new(:w => 800, :h => 500) do
-	bar(
-		:data => [10,10,15,10,20,98, 50],
-		:captions => [ "group_one", "group_two", "group_three", "group_four", "group_five", "group_six", "group"],
-		:style => {"fill-opacity" => "0.4","fill" => "green"}
+p = Svgplot::BarChart.new(:w => 800, :h => 500) do
+	plot(
+		:desc => "Ohh, some fancy data",
+		:data => {
+			"group_one" => 10,
+			"group_two" => 90,
+			"group_three" => 55
+		},
+		:style => {
+			"fill-opacity" => "0.4",
+			"fill" => "green",
+			"stroke" => "black"
+		},
+		:options => {
+			:show_captions => false,
+			:barwidth => 100
+		}
 	)
 end
 File.open("test/bar.svg","w") do |f|
