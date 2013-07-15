@@ -3,6 +3,7 @@ require 'rasem'
 module Svgplot
 	class Plot < Rasem::SVGImage
 		DefaultStyle = { :stroke => "black", :fill => "black" }
+		DefaultPalette = [ "steelblue", "indianred", "seagreen", "thistle", "khaki", "cadetblue", "lightsalmon", "amethyst", "palevioletred" ]
 
 		def initialize(param = {},&block)
 			@param = Hash.new
@@ -18,7 +19,7 @@ module Svgplot
 			end
 			super(@param[:w],@param[:h],&new_block)
 		end
-
+		protected
 		def frame
 			w = @param[:w]
 			h = @param[:h]
@@ -85,24 +86,34 @@ module Svgplot
 			else raise ArgumentError, "Unknown marker type"
 			end
 		end
-	end
-
-	def text(x, y, text, style=DefaultStyles[:text], transform=nil)
-		@output << %Q{<text x="#{x}" y="#{y}"}
-		style = fix_style(default_style.merge(style))
-		@output << %Q{ font-family="#{style.delete "font-family"}"} if style["font-family"]
-		@output << %Q{ font-size="#{style.delete "font-size"}"} if style["font-size"]
-		write_style style
-		@output << %Q{ transform="#{transform}" } unless transform.nil?
-		@output << ">"
-		dy = 0      # First line should not be shifted
-		text.each_line do |line|
-			@output << %Q{<tspan x="#{x}" dy="#{dy}em">}
-			dy = 1    # Next lines should be shifted
-			@output << line.rstrip
-			@output << "</tspan>"
+		def path(path,style = DefaultStyle)
+			@output << %Q{<path d="#{path}"}
+			write_style style
+			@output << " />"
 		end
-		@output << "</text>"
+
+		def text(x, y, text, style=DefaultStyles[:text], transform=nil)
+			@output << %Q{<text x="#{x}" y="#{y}"}
+			style = fix_style(default_style.merge(style))
+			@output << %Q{ font-family="#{style.delete "font-family"}"} if style["font-family"]
+			@output << %Q{ font-size="#{style.delete "font-size"}"} if style["font-size"]
+			write_style style
+			@output << %Q{ transform="#{transform}" } unless transform.nil?
+			@output << ">"
+			dy = 0      # First line should not be shifted
+			text.each_line do |line|
+				@output << %Q{<tspan x="#{x}" dy="#{dy}em">}
+				dy = 1    # Next lines should be shifted
+				@output << line.rstrip
+				@output << "</tspan>"
+			end
+			@output << "</text>"
+		end
+
+		def pick_color i,user_palette=DefaultPalette
+			n = user_palette.size
+			user_palette[i % n]
+		end
 	end
 end
 
