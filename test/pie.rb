@@ -10,6 +10,10 @@ p = Svgplot::PieChart.new(
 			"5" =>  0.1,
 			"6" =>  0.1,
 			"7" =>  0.1
+		},
+		:options => {
+			:show_captions => false,
+			:one_piece => false
 		}
 	)
 end

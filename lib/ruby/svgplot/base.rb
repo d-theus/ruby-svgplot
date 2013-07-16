@@ -2,7 +2,7 @@ require 'rasem'
 
 module Svgplot
 	class Plot < Rasem::SVGImage
-		DefaultStyle = { :stroke => "black", :fill => "black" }
+		DefaultStyle = { "stroke" => "black", "fill" => "black", "fontsize" => 14 }
 		DefaultPalette = [ "steelblue", "indianred", "seagreen", "thistle", "khaki", "cadetblue", "lightsalmon", "amethyst", "palevioletred" ]
 
 		def initialize(param = {},&block)
@@ -86,9 +86,10 @@ module Svgplot
 			else raise ArgumentError, "Unknown marker type"
 			end
 		end
-		def path(path,style = DefaultStyle)
+		def path(path,style = DefaultStyle, transform = nil)
 			@output << %Q{<path d="#{path}"}
 			write_style style
+			@output << %Q{ transform="#{transform}" } unless transform.nil?
 			@output << " />"
 		end
 
