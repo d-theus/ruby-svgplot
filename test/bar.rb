@@ -11,6 +11,14 @@ p = Svgplot::BarChart.new(:w => 800, :h => 500) do
 			"fill-opacity" => "0.4",
 			"fill" => ["green"],
 			"stroke" => "black"
+		},
+		:options => {
+			:box => {
+				:x => 10,
+				:y => 10,
+				:h => 450,
+				:w => 700
+			}
 		}
 	)
 end
