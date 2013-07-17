@@ -2,7 +2,7 @@ require 'rasem'
 
 module Svgplot
 	class Plot < Rasem::SVGImage
-		DefaultStyle = { "stroke" => "black", "fill" => "black", "fontsize" => 14 }
+		DefaultStyle = { "stroke" => "black", "fill" => "black", "font-size" => 14 }
 		DefaultPalette = [ "steelblue", "indianred", "seagreen", "thistle", "khaki", "cadetblue", "lightsalmon", "amethyst", "palevioletred" ]
 
 		def initialize(param = {},&block)
