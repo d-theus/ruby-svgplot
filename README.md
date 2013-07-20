@@ -52,7 +52,7 @@ Here is more on the parameters, more presicely keys of parameter hash of `plot`:
 Available are `:rect`,`:circ`,`:tria`,`:cros`.
 * `:desc` for descriptions for each item.
 
-Example:
+#####Example:
     
     p = Svgplot::FPlot.new(:w => 800, :h => 500, :grid => true) do
     	plot :f => lambda{|x| return Math.cos(x)}
@@ -84,9 +84,10 @@ If array is used as value, then :desc is an array of strings.
 * `:options`  
  * `:box` to set box geometry for actual barchart. It is used if you want draw captions below  
 chart, or if there is some other reason not to populate all the image. `{:h, :w, :x, :y}`
+ * `:show_captions`: `true` or `false`
  * `:captions_pos` to set, where captions will be drawn: `:top`, `:middle`, `:bottom`, `:below`
 
-Example:
+#####Example:
 
     p = Svgplot::BarChart.new(:w => 800, :h => 500, :grid => true, :yrange => [6,12]) do
     	plot(
@@ -129,6 +130,41 @@ Example:
     	)
     end
 
+####Drawing pie charts
+
+Class: `Svgplot::Piechart`  
+Parameters: `:w`,`:h` for image width and height  
+To draw chart call `plot` with:
+
+* `:data`
+* `:options`  
+ * `:show_captions`: `true` or `false`
+ * `:one_piece`: `true` or `false`
+* `:style`
+* `:desc`
+
+#####Example:
+
+    p = Svgplot::PieChart.new(
+    :w => 600, :h => 400) do
+    	plot(
+    		:data => {
+    			"one" => 0.3,
+    			"two" => 0.2,
+    			"3" =>  0.1,
+    			"4" =>  0.1,
+    			"5" =>  0.1,
+    			"6" =>  0.1,
+    			"7" =>  0.1
+    		},
+    		:options => {
+    			:show_captions => false,
+    			:one_piece => false
+    		}
+    	)
+    end
+
+ 
 
 ## Contributing
 
